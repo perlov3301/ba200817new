@@ -25,6 +25,7 @@ import { sendRefreshToken } from "./sendRefreshToken";
 //	const a1 = process.env.REFRESH_TOKEN_SECRET ; const a2 = process.env.ACCESS_TOKEN_SECRET;
 //	console.log(`secrets: refresh_token is ${a1}; access_token is ${a2}`);
 	app.post("/refresh_token", async (req, res ) => { // for security purpouse haven't used graphql
+	  // console.log(req.headers); afterward console.log()
 	  const token = req.cookies.jid;
       if (!token) { return res.send({ ok: false, accessToken: "" }); }
 	  let payload: any = null;

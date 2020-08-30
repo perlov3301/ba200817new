@@ -1,10 +1,12 @@
-import { Arg, Ctx, Field, ObjectType, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, Int, ObjectType, Resolver } from 'type-graphql';
 import { Query, Mutation, UseMiddleware } from 'type-graphql';
 import {hash, compare} from 'bcryptjs';
 import { User } from './entity/User';
 import { MyContext } from './MyContext';
 import { createAccessToken, createRefreshToken } from './auth';
 import { isAuth } from './isAuth'; 
+import { sendRefreshToken } from './sendRefreshToken';
+import { getConnection } from 'typeorm';
 
 @ObjectType()
 class LoginResponse {
@@ -26,6 +28,16 @@ export class UserResolver {
 	) { 
 		console.log(payload);
 		return  `your user id is: ${payload!.userId}`; }
+
+	@Mutation(() => Boolean)
+	async revokeRefreshTokensForUser(
+		@Arg('userId', () => Int) userId: number
+	) {
+		await getConnection()
+		  .getRepository(User)
+		  .increment({id: userId}, 'tokenVersion', 1);
+		return true; 
+	}
 
 	@Mutation(() => Boolean)
 	async register(
@@ -57,7 +69,8 @@ export class UserResolver {
 			 const valid = await compare(varpassword, user.password); 
 			 if (!valid) { throw new Error("bad password") }
 			 // login successful
-			 res.cookie('jid', createRefreshToken(user),{ httpOnly: true});
+			 sendRefreshToken(res, createRefreshToken(user));
+
 		   return { accessToken: createAccessToken(user) };
 		}
 }

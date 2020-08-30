@@ -8,7 +8,8 @@ import { UserResolver } from "./UserResolver";
 import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
 import {User} from "./entity/User";
-import { createAccessToken } from "./auth";
+import { createAccessToken, createRefreshToken } from "./auth";
+import { sendRefreshToken } from "./sendRefreshToken";
 
 (async () => {
 	const app = express();
@@ -24,19 +25,24 @@ import { createAccessToken } from "./auth";
 //	const a1 = process.env.REFRESH_TOKEN_SECRET ; const a2 = process.env.ACCESS_TOKEN_SECRET;
 //	console.log(`secrets: refresh_token is ${a1}; access_token is ${a2}`);
 	app.post("/refresh_token", async (req, res ) => { // for security purpouse haven't used graphql
-	const token = req.cookies.jid;
-  if (!token) { return res.send({ ok: false, accessToken: "" }); }
-	let payload: any = null;
-	try {
-    payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
-	} catch(err) { 
-		console.log(err);
-		return res.send({ ok: false, accessToken: "" });
+	  // console.log(req.headers); afterward console.log()
+	  const token = req.cookies.jid;
+      if (!token) { return res.send({ ok: false, accessToken: "" }); }
+	  let payload: any = null;
+	  try { 
+		  payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
+	   } catch(err) { 
+	  	console.log(err);
+		  return res.send({ ok: false, accessToken: "" });
 	}
-	// token is valid and we can send back an access token
-	const  user = await User.findOne({ id:  payload.userId}) ;
-	if (!user) { return res.send({ ok: false, accessToken: "" }); }
-  return res.send({ ok: true, accessToken: createAccessToken(user)});
+	// token is valid and we can send back a n access token
+	  const  user = await User.findOne({ id:  payload.userId}) ;
+	  if (!user) { return res.send({ ok: false, accessToken: "" }); }
+	  if (user.tokenVersion !== payload.tokenVersion) {
+	        	return res.send({ ok: false, accessToken: "" });
+	  }
+	  sendRefreshToken(res, createRefreshToken(user));
+    return res.send({ ok: true, accessToken: createAccessToken(user)});
 	});
 	
 	await createConnection();
@@ -51,7 +57,7 @@ import { createAccessToken } from "./auth";
   app.listen(port, () => {
     console.log(`express server started at ${port}`);
   })
-})()
+})() 
 
 // # Schema for graphql
 //const apolloServer = new ApolloServer({
