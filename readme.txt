@@ -7,6 +7,7 @@
   git push -u origin master
   git add . 
   git commit -am "refresh token"
+/** get remote URL: %git config --get remote.origin.url  */
   git push -u origin master
 # play slow
 osascript -e 'tell application "QuickTime Player" to set rate of document 1 to 0.77'
@@ -38,3 +39,9 @@ package.json => script=>"gen"
 generate codegen.yml: npm install
 install plugins: 
 🚀
+#written var in graphql(using $):
+mutation Register($email: String!, $password: String!) {
+  register(email: $email,  password: $password)
+}
+# database within /server/ormconfig.json
+# graphql
