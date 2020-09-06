@@ -8,7 +8,8 @@ import "./index.css";
 // property-setlink-is-missing-in-type-apolloclientnormalizedcacheobject-but
 //  client: ApolloClient<TCache> | DefaultClient<TCache>;
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql'
+  uri: 'http://localhost:4000/graphql',
+  credentials: "include"
 })
 ReactDOM.render(
   <ApolloProvider client={client}>

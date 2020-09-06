@@ -1,3 +1,16 @@
 button {
     border-radius: 0.3rem;
 }
+fieldset {
+    border-radius: 0.5rem;
+    background-color: rgba(100, 125, 125, 0.26);
+    margin-top: 1em;
+    width: 30rem;
+}
+fieldset legend {
+    border-radius: 0.3rem;
+    background-color: rgb(125, 125, 125);
+    color: white;
+    padding: 0 0.3rem 0 0.3rem;
+    font-size: 1.25rem;
+}

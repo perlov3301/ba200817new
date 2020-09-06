@@ -45,3 +45,10 @@ mutation Register($email: String!, $password: String!) {
 }
 # database within /server/ormconfig.json
 # graphql
+# response=>set-cookie
+  AppoloClient({uri: "http://localhost:4000",credential: include});
+  http://localhost:3000 is from console=>origin
+  Set-Cookie: jid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIzLCJ
+                  0b2tlblZlcnNpb24iOjAsImlhdCI6MTU5OTM1MDc4NiwiZXhwIjoxNTk5
+                  OTU1NTg2fQ.n3QpA94gy3r9P0ZVeFSFiYry4HejRW0brMG1b4VQPak; 
+                  Path=/; HttpOnly
