@@ -46,7 +46,9 @@ mutation Register($email: String!, $password: String!) {
 # database within /server/ormconfig.json
 # graphql
 # response=>set-cookie
-  AppoloClient({uri: "http://localhost:4000",credential: include});
+  server index.ts before applyMiddleware(app, cors)
+  : app.use(cors({origin: "http://localhost:3000}", credentials: true))
+  webAppoloClient({uri: "http://localhost:4000",credential: include});
   http://localhost:3000 is from console=>origin
   Set-Cookie: jid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIzLCJ
                   0b2tlblZlcnNpb24iOjAsImlhdCI6MTU5OTM1MDc4NiwiZXhwIjoxNTk5

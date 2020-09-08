@@ -1,27 +1,37 @@
 import "dotenv/config";
 import "reflect-metadata";
-import {createConnection} from "typeorm";
+import { createConnection } from "typeorm";
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { UserResolver } from "./UserResolver";
 import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
+import cors from "cors";
 import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
 
 (async () => {
 	const app = express();
-	// not necessery
+	// app.use(cors({
+	// 	origin: "http://localhost:3000",
+	// 	credentials: true
+	// }));
+	app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true
+    }));
+	// not necessery: html5 response page
 	const path = require('path');
 	app.use(express.static(path.join(__dirname, 'html5')));
 	app.get('/html5', function(_req, res) {
 		res.sendFile(path.join(__dirname, 'html5', 'res.html'));
 	});
 	// ben award
-	app.get('/', (_req, res) => {res.send("<h1 >hello world is sended</h1>")} );
 	app.use(cookieParser());
+	app.get('/', (_req, res) => {res.send("<h1 >hello world is sended</h1>")} );
 //	const a1 = process.env.REFRESH_TOKEN_SECRET ; const a2 = process.env.ACCESS_TOKEN_SECRET;
 //	console.log(`secrets: refresh_token is ${a1}; access_token is ${a2}`);
 	app.post("/refresh_token", async (req, res ) => { // for security purpouse haven't used graphql
@@ -50,7 +60,8 @@ import { sendRefreshToken } from "./sendRefreshToken";
 		schema: await buildSchema({ resolvers: [UserResolver] }),
 		context: ({ req, res }) => ({ req, res })
   });
-  apolloServer.applyMiddleware({ app }); 
+  apolloServer.applyMiddleware({ app, cors: false }); 
+ // apolloServer.applyMiddleware({ app }); 
   const print = process.versions;
   console.log(print);
   const port = 4000 || process.env.PORT;

@@ -2,10 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
-// import { Routes } from './Routes';
+import { Routes } from './Routes';
 import "./index.css";
 import { getAccessToken } from './accessToken';
-import { App } from './App';
 // https://stackoverflow.com/questions/63005568/
 // property-setlink-is-missing-in-type-apolloclientnormalizedcacheobject-but
 //  client: ApolloClient<TCache> | DefaultClient<TCache>;
@@ -22,7 +21,7 @@ const client = new ApolloClient({
 });
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <Routes/>
   </ApolloProvider>,
   document.getElementById('root') 
 );
