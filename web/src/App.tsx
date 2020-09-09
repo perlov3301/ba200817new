@@ -11,6 +11,7 @@ export const App: React.FC<Props> = () => {
        { method: "POST", 
          credentials: "include" })
        .then(async (x) => {
+         // const data = await x.json();
          const { accessToken } = await x.json();
          setAccessToken(accessToken);
          // console.log(data);
